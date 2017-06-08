@@ -1,0 +1,313 @@
+# Idea inspired by paper: http://erikdemaine.org/papers/ConveyerAlphabet_G4G9/paper.pdf
+# and application/simulation: http://erikdemaine.org/fonts/conveyer/
+
+from turtle import *
+from math import *
+from random import choice
+
+factor = 2
+letter_cell_size = 5
+
+step = letter_cell_size * factor
+rd = step / 2
+
+c = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [5, 7, "l"], 4:[2, 6, "r"], 5: [2, 2, "r"], 6: [5, 1, "l"], 7: [1, 1, "l"]}
+#e = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [7, 7, "l"], 4:[2, 6, "r"], 5:[2, 5, "r"], 6:[7, 4, "l"], 7: [2, 3, "r"], 8: [2, 2, "r"], 9: [7, 1, "l"], 10: [1, 1, "l"]}
+k = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [2, 5, "r"], 4:[6, 7, "l"], 5:[4, 4, "r"], 6:[6, 1, "l"], 7: [2, 3, "r"], 8: [1, 1, "l"]}
+l = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [2, 2, "r"], 4:[5, 1, "l"], 5:[1, 1, "l"]}
+o = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [5, 7, "l"], 4:[5, 1, "l"], 5:[1, 1, "l"]}
+#p = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [4, 7, "l"], 4:[5, 5, "l"], 5:[4, 4, "l"], 6:[2, 3, "r"], 7: [1, 1, "l"]}
+r = {1: [1, 1, "l"], 2: [1, 7, "l"], 3: [6, 7, "l"], 4:[6, 5, "l"], 5:[5, 4, "r"], 6:[6, 1, "l"], 7: [2, 4, "r"], 8: [1, 1, "l"]}
+s = {1: [1, 5, "l"], 2: [1, 7, "l"], 3: [6, 7, "l"], 4:[2, 6, "r"], 5: [6, 3, "l"], 6: [6, 1, "l"], 7: [1, 1, "l"], 8: [5, 2, "r"], 9: [1, 5, "l"]}
+#w = {1: [2, 1, "l"], 2: [1, 7, "l"], 3: [3, 4, "r"], 4:[4, 7, "l"], 5:[5, 4, "r"], 6:[7, 7, "l"], 7: [6, 1, "l"], 8: [4, 2, "r"], 9: [2, 1, "r"]}
+plus = {1: [3, 1, "l"], 2: [2, 2, "r"], 3: [1, 3, "l"], 4:[2, 4, "r"], 5:[3, 5, "l"], 6:[4, 4, "r"], 7: [5, 3, "l"], 8: [4, 2, "r"], 9: [3, 1, "l"]}
+
+message = [c, s, r, o, c, k, s, r, o, l, l, s]
+coord = [ [-80, 90], [40, 90],   [-190, -10],[-110, -10], [-30, -10], [50, -10],[120, -10],    [-190, -150],[-110, -150], [-30, -150], [50, -150],[120, -150] ]
+message_i = 0
+
+start_x = -190
+start_y = 0
+
+
+previous_color = ''
+
+def pick_color():
+  global previous_color
+  colors = ['red', 'green', 'blue', 'magenta']
+  color = choice(colors)
+  while color == previous_color:
+    color = choice(colors)
+  previous_color = color
+  return color
+
+
+def draw_roller(x, y, point_data):
+  point_x = x + point_data[0] * step
+  point_y = y + point_data[1] * step
+  #print "roller at", point_x, point_y
+  roller.goto(point_x + rd, point_y)     # the circle center is r steps to the left, so we need to move right by r
+  roller.pendown()
+  roller.circle(rd)
+  roller.penup()
+
+
+def get_heading(letter, p1, p2):
+  x1 = letter[p1][0]
+  y1 = letter[p1][1]
+  x2 = letter[p2][0]
+  y2 = letter[p2][1]
+  setter.goto(x1, y1)
+  heading = setter.towards(x2, y2)
+  #print heading
+  return heading
+
+
+def roll_letter(letter, x, y):
+  roller.penup()
+  heading = get_heading(letter, 1, 2)
+  roller.setheading(heading)
+  
+  for point, data in letter.items():
+    draw_roller(x, y, data)
+
+
+
+def set_offset(direction, heading):   # direction = 'l' or 'r', heading = degrees
+  if direction == 'l':
+    if heading == 0 or heading == 360:
+      dx = 0
+      dy = rd
+    if heading == 90 or heading == 270:
+      dx = -rd
+      dy = 0
+    if heading == 180:
+      dx = 0
+      dy = -rd
+  if direction == 'r':
+    if heading == 0 or heading == 360:
+      dx = 0
+      dy = -rd
+    if heading == 90 or heading == 270:
+      dx = rd
+      dy = 0
+    if heading == 180:
+      dx = 0
+      dy = rd
+  return (dx, dy)
+
+
+def set_turn(letter, p, lines):
+  direction = letter[p + 2][2]        # 'l' or 'r'
+  start_angle = lines[p][0]
+  end_angle = lines[p + 1][0]
+  d_angle = start_angle - end_angle
+  #print "set_turn:\t", lines[p], direction, d_angle
+  if direction == 'l':
+    if 180 >= d_angle >= 0:
+      turn = d_angle
+      arc = -rd
+    else:
+      #turn = d_angle % 90
+      turn = 360 + d_angle
+      arc = -rd
+  else:
+    if -180 <= d_angle <= 0:
+      turn = -d_angle
+      arc = rd
+    else:
+      #turn = d_angle
+      turn = 360 - d_angle
+      arc = rd
+  turn = turn % 360
+  return (arc, turn)
+  
+
+def belt_letter(letter, x, y):
+  lines = set_letter_belt(letter)     # calculate angles and distances between letter points
+  belter.penup()
+  dx, dy = set_offset(letter[1][2], lines[0][0])
+  point_x = x + letter[1][0] * step + dx
+  point_y = y + letter[1][1] * step + dy
+  belter.goto(point_x, point_y)
+  belter.pendown()
+  belter.showturtle()
+  belter.color(pick_color())
+  
+  for p in range(len(lines) - 1):
+    belter.setheading(lines[p][0])
+    belter.forward(step * lines[p][1])
+    #turn = lines[p][0] - lines[p + 1][0]
+    arc, turn = set_turn(letter, p, lines)
+    #print "belt_letter:\t", p, arc, turn
+    belter.circle(arc, turn)    # turn
+
+  belter.forward(step * lines[p + 1][1])  # move and close the last segment/line
+  belter.penup()
+  belter.hideturtle()
+
+
+def set_letter_belt(letter):
+  lines = []
+  for p in range(1, len(letter)):
+    heading = 0
+    distance = 0
+    x1 = letter[p][0]       # x of point 1
+    y1 = letter[p][1]       # y of point 1
+    d1 = letter[p][2]       # direction (l or r) of point 1
+    x2 = letter[p + 1][0]
+    y2 = letter[p + 1][1]
+    d2 = letter[p + 1][2]
+    if d1 == d2:            # l and l or r and r
+      setter.goto(x1, y1)
+      heading = setter.towards(x2, y2)
+      distance = setter.distance(x2, y2)
+      
+    elif d1 == 'r' and d2 == 'l' and x1 - x2 == 1 and abs(y1 - y2) != 1:
+        x2 = x1
+        setter.goto(x1, y1)
+        heading = setter.towards(x2, y2)
+        distance = setter.distance(x2, y2)
+    elif d1 == 'l' and d2 == 'r' and x2 - x1 == 1 and abs(y1 - y2) != 1:
+        x1 = x2
+        setter.goto(x1, y1)
+        heading = setter.towards(x2, y2)
+        distance = setter.distance(x2, y2)
+        
+    elif d1 == 'r' and d2 == 'l' and y2 - y1 == 1 and abs(x1 - x2) != 1:
+        y1 = y2
+        setter.goto(x1, y1)
+        heading = setter.towards(x2, y2)
+        distance = setter.distance(x2, y2)
+    elif d1 == 'l' and d2 == 'r' and y1 - y2 == 1:
+        y2 = y1
+        setter.goto(x1, y1)
+        heading = setter.towards(x2, y2)
+        distance = setter.distance(x2, y2)
+    elif d1 == 'l' and d2 == 'r' and y2 - y1 == 1:
+        y1 = y2
+        setter.goto(x1, y1)
+        heading = setter.towards(x2, y2)
+        distance = setter.distance(x2, y2)
+    else:                   # it's a diagonal line; need a different calculation
+      setter.goto(x1, y1)
+      distance = setter.distance(x2, y2)  # first calculate "straight distance"
+      r = rd / letter_cell_size           # the radius in cell units (not pixels)
+      d_heading = 0.49 * degrees(asin(2 * r / distance))
+      distance = 0.42 * r + sqrt(distance ** 2 - 4 * r ** 2) # then adjust for diagonal
+      heading = setter.towards(x2, y2)
+      #if heading < 180 and d1 == 'l':
+      if d1 == 'l':
+        heading = heading - d_heading
+      else:
+        heading = heading + d_heading      
+      #print distance, heading
+
+    heading = heading % 360
+    lines.append([heading, distance])
+  #print lines
+  return lines
+
+
+def on_screen_click(x, y):
+  global message_i
+  if message_i <= 7:
+    tracer(5)
+    belt_letter(message[message_i], coord[message_i][0], coord[message_i][1])
+    message_i += 1
+    tracer(1)
+  if message_i >= 8:
+    tracer(5)
+    for i in range(4):
+      belt_letter(message[message_i], coord[message_i][0], coord[message_i][1])
+      message_i += 1
+    tracer(1)
+  if message_i == 7:
+    writer.write("and", font=("Arial", 18, "bold"))
+
+
+screen = Screen()
+screen.onclick(on_screen_click)
+
+setter = Turtle()
+setter.hideturtle()
+setter. penup()
+
+roller = Turtle()
+roller.hideturtle()
+
+belter = Turtle()
+belter.hideturtle()
+
+writer = Turtle()
+writer.hideturtle()
+writer.penup()
+writer.goto(0, -50)
+
+
+row_1_y = 90
+row_2_y = -10
+row_25_y = -50
+row_3_y = -150
+
+tracer(8)
+
+# roll letters:
+#roll_letter(e, -100, 0)
+#roll_letter(p, start_x, start_y)
+# row 1:
+roll_letter(c, -80, row_1_y)
+roll_letter(s, 40, row_1_y)
+
+# row 2:
+roll_letter(r, -190, row_2_y)
+roll_letter(o, -110, row_2_y)
+roll_letter(c, -30, row_2_y)
+
+roll_letter(k, 50, row_2_y)
+roll_letter(s, 120, row_2_y)
+
+# row 2.5:
+#roll_letter(plus, 0, row_25_y)
+
+# row 3:
+roll_letter(r, -190, row_3_y)
+roll_letter(o, -110, row_3_y)
+roll_letter(l, -30, row_3_y)
+roll_letter(l, 50, row_3_y)
+roll_letter(s, 120, row_3_y)
+
+# belt letters:
+#belt_letter(e, -100, 0)
+#belt_letter(p, start_x, start_y)
+
+#tracer(2)
+# row 1
+'''
+for i in range(2):
+  belt_letter(c, -80, row_1_y)
+  belt_letter(s, 40, row_1_y)
+  
+  # row 2:
+  belt_letter(r, -190, row_2_y)
+  belt_letter(o, -110, row_2_y)
+  belt_letter(c, -30, row_2_y)
+  
+  belt_letter(k, 50, row_2_y)
+  
+  belt_letter(s, 120, row_2_y)
+  
+  # row 2.5:
+  #belt_letter(plus, 0, row_25_y)
+  writer.write("and", font=("Arial", 16, "normal"))
+
+  # row 3:
+  belt_letter(r, -190, row_3_y)
+  belt_letter(o, -110, row_3_y)
+  belt_letter(l, -30, row_3_y)
+  belt_letter(l, 50, row_3_y)
+  belt_letter(s, 120, row_3_y)
+'''
+#tracer(1)
+
+
