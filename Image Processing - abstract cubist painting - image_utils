@@ -1,0 +1,63 @@
+import image
+
+win = None
+win_height = 0
+win_width = 0
+
+def init_image(image_name, factor = 1):
+  global win, win_height, win_width
+  img = image.Image(image_name)
+  img_w = img.getWidth()
+  img_h = img.getHeight()
+  if factor > 1:
+    img = image.EmptyImage(factor * img_w, factor * img_h)
+    img_w = factor * img_w
+    img_h = factor * img_h
+
+  print image_name, "width:", img_w, ", height:", img_h
+  
+  if win_height < img_h:
+    win_height = img_h
+  if win_width < img_w:
+    win_width = img_w
+    
+  win = image.ImageWin(win_width, win_height)
+  img.draw(win)
+  img.setDelay(5, 9)   # setDelay(0) turns off animation
+  return img
+
+
+def init_image_no_display(image_name, factor = 1):
+  global win, win_height, win_width
+  img = image.Image(image_name)
+  img_w = img.getWidth()
+  img_h = img.getHeight()
+  if factor > 1:
+    img = image.EmptyImage(factor * img_w, factor * img_h)
+    img_w = factor * img_w
+    img_h = factor * img_h
+
+  print image_name, "width:", img_w, ", height:", img_h
+  
+  if win_height < img_h:
+    win_height = img_h
+  if win_width < img_w:
+    win_width = img_w
+    
+  win = image.ImageWin(win_width, win_height)
+  # this is the no_display part:
+  #img.draw(win)
+  #img.setDelay(30, 90)   # setDelay(0) turns off animation
+  return img
+
+
+def resize_window(small_img, factor):
+  global win
+  print "big image width:", small_img.getWidth() * factor, ", big image height:", small_img.getHeight() * factor
+  win = image.ImageWin(small_img.getWidth() * factor, small_img.getHeight() * factor)
+  #big_img.setDelay(1, 50)   # setDelay(0) turns off animation
+
+
+def draw_image(img):
+  img.draw(win)
+  img.setDelay(5, 9)   # setDelay(0) turns off animation
