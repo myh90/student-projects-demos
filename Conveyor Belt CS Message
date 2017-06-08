@@ -1,4 +1,4 @@
-# Idea inspired by a paper by Erik Demaine: http://erikdemaine.org/papers/ConveyerAlphabet_G4G9/paper.pdf
+# Idea inspired by a paper by Erik Demaine at: http://erikdemaine.org/papers/ConveyerAlphabet_G4G9/paper.pdf
 # and application/simulation: http://erikdemaine.org/fonts/conveyer/
 
 from turtle import *
