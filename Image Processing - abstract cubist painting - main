@@ -1,0 +1,134 @@
+# file: Image Processing - abstract cubist painting
+# inspired by: http://interactivepython.org/courselib/static/thinkcspy/MoreAboutIteration/2DimensionalIterationImageProcessing.html
+
+from image_utils import *
+from random import randint, choice
+from math import floor
+
+
+def break_up(length, n):
+  segment = length / n
+  segments = [0]
+  for i in range(1, n):
+    delta = choice([-1, 1]) * randint(1, 9) / 10 / 2
+    new_limit = int(floor(i * segment + segment * delta))
+    if new_limit <= segments[-1]:
+      new_limit += 1
+    segments.append(new_limit)
+  segments.append(length)
+  return segments
+
+
+
+def get_color(original_image, x, y):
+  p = original_image.getPixel(x, y)
+  red = p.getRed()
+  green = p.getGreen()
+  blue = p.getBlue()
+  return [red, green , blue]
+
+
+
+def get_average_color(original_image, x_limits, col, y_limits, row):
+  sum_red, sum_green, sum_blue = 0, 0, 0
+  for r in range(y_limits[row], y_limits[row + 1]):
+    for c in range(x_limits[col], x_limits[col + 1]):
+      red, green, blue = get_color(original_image, c, r)
+      sum_red += red
+      sum_green += green
+      sum_blue += blue
+  total_n = (x_limits[col + 1] - x_limits[col]) * (y_limits[row + 1] - y_limits[row])
+  return [sum_red // total_n, sum_green // total_n , sum_blue // total_n]
+
+
+
+def set_average_color_square(original_image, x_limits, col, y_limits, row, colors):
+  avg_colors = colors[row][col]
+  for r in range(y_limits[row], y_limits[row + 1]):
+    for c in range(x_limits[col], x_limits[col + 1]):
+      newpixel = image.Pixel(avg_colors[0], avg_colors[1], avg_colors[2])
+      original_image.setPixel(c, r, newpixel)
+
+
+
+
+def go_cubist(original_image):
+  original_w = original_image.getWidth()
+  original_h = original_image.getHeight()
+  
+  n_width_cells = 29    # number of cells across the width of the screen/image
+  n_height_cells = 33   # number of cells across the height of the screen/image
+  
+  if export_data:
+    print "n_width_cells = ", n_width_cells
+    print "n_height_cells = ", n_height_cells
+  
+  x_limits = break_up(original_w, n_width_cells)
+  y_limits = break_up(original_h, n_height_cells)
+
+  if export_data:
+    print "x_limits =", x_limits
+    print "y_limits =", y_limits
+  
+  colors = []
+  for row in range(n_height_cells):
+    col_colors = []
+    for col in range(n_width_cells):
+      avg_red, avg_green , avg_blue = get_average_color(original_image, x_limits, col, y_limits, row)
+      #print "avg_color:", avg_red, avg_green , avg_blue
+      col_colors.append([avg_red, avg_green , avg_blue])
+      if export_data:
+        print avg_red, avg_green , avg_blue
+    colors.append(col_colors)
+  #print "colors =", colors
+
+  for row in range(n_height_cells):
+    for col in range(n_width_cells):
+      set_average_color_square(original_image, x_limits, col, y_limits, row, colors)
+
+
+
+#### if you want to run the "Image Processing - abstract pointillistic painting" program
+#### you need to print the following, and copy & past the data/printout into the image_data.txt tab
+#### of that program.
+export_data = True    # if true - print out the data for the "Image Processing - abstract pointillistic painting" program
+'''
+n_width_cells = 31
+n_height_cells = 59
+x_limits = [0, 11, 25, 36, 42, 51, 67, 78, 88, 95, 106, 112, 123, 138, 150, 156, 166, 175, 190, 195, 206, 222, 227, 240, 248, 260, 273, 283, 292, 307, 311, 325]
+y_limits = [0, 10, 16, 23, 28, 36, 47, 52, 64, 71, 77, 81, 94, 97, 106, 118, 122, 130, 137, 143, 157, 160, 172, 175, 187, 190, 201, 206, 213, 220, 227, 236, 242, 250, 261, 271, 279, 283, 289, 297, 309, 317, 322, 332, 335, 344, 356, 363, 371, 378, 386, 389, 398, 404, 411, 420, 431, 435, 442, 453]
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+253 251 253
+244 241 241
+210 200 195
+200 189 184
+207 197 194
+247 244 245
+252 250 252
+...
+'''
+
+################# main #####################
+
+# create and display the original image:
+#original_image = init_image("queen_of_hearts_small.png")
+
+# OR create and DON'T display the original image:
+#original_image = init_image_no_display("Mark_Pinewood.png")
+#original_image = init_image_no_display("HaggaiMark1.jpg")
+original_image = init_image_no_display("mark_gardner.jpeg")
+
+go_cubist(original_image)
+draw_image(original_image)
+
+
