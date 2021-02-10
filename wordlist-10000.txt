@@ -1926,6 +1926,7 @@ configuring
 confirm
 confirmation
 confirmed
+confirming
 conflict
 conflicts
 confused
@@ -2366,6 +2367,10 @@ decorating
 decorative
 decrease
 decreased
+decrypt
+decrypted
+decrypting
+decryption
 dedicated
 dee
 deemed
@@ -2997,6 +3002,8 @@ encourage
 encouraged
 encourages
 encouraging
+encrypt
+encrypted
 encryption
 encyclopedia
 end
