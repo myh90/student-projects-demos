@@ -718,7 +718,6 @@ axis
 aye
 az
 azerbaijan
-b
 ba
 babe
 babes
@@ -1254,7 +1253,6 @@ by
 bye
 byte
 bytes
-c
 ca
 cab
 cabin
@@ -2270,7 +2268,6 @@ cylinder
 cyprus
 cz
 czech
-d
 da
 dad
 daddy
@@ -2834,7 +2831,6 @@ dying
 dylan
 dynamic
 dynamics
-e
 ea
 each
 eagle
@@ -3302,7 +3298,6 @@ eye
 eyed
 eyes
 ez
-f
 fa
 fabric
 fabrics
@@ -3734,7 +3729,6 @@ fw
 fwd
 fx
 fy
-g
 ga
 gabriel
 gadgets
@@ -4022,7 +4016,6 @@ guyana
 guys
 gym
 gzip
-h
 ha
 habitat
 habits
@@ -4742,7 +4735,6 @@ itunes
 iv
 ivory
 ix
-j
 ja
 jack
 jacket
@@ -4869,7 +4861,6 @@ justify
 justin
 juvenile
 jvc
-k
 ka
 kai
 kansas
@@ -4967,7 +4958,6 @@ kuwait
 kw
 ky
 kyle
-l
 la
 lab
 label
@@ -5894,7 +5884,6 @@ mysql
 mysterious
 mystery
 myth
-n
 na
 nail
 nails
@@ -6351,7 +6340,6 @@ oxide
 oxygen
 oz
 ozone
-p
 pa
 pac
 pace
@@ -7143,8 +7131,8 @@ puzzle
 puzzles
 pvc
 python
-q
 qatar
+qa
 qc
 qld
 qt
@@ -7189,7 +7177,6 @@ quotations
 quote
 quoted
 quotes
-r
 ra
 rabbit
 race
@@ -7770,7 +7757,6 @@ rw
 rwanda
 rx
 ryan
-s
 sa
 sacramento
 sacred
@@ -8775,7 +8761,6 @@ sys
 system
 systematic
 systems
-t
 ta
 tab
 table
@@ -9324,7 +9309,6 @@ types
 typical
 typically
 typing
-u
 uc
 uganda
 ugly
@@ -9451,7 +9435,6 @@ utils
 uv
 uw
 uzbekistan
-v
 va
 vacancies
 vacation
@@ -9641,7 +9624,6 @@ vsnet
 vt
 vulnerability
 vulnerable
-w
 wa
 wage
 wages
@@ -9929,7 +9911,6 @@ www
 wx
 wy
 wyoming
-x
 xanax
 xbox
 xerox
@@ -9939,9 +9920,9 @@ xl
 xml
 xnxx
 xp
+xray
 xx
 xxx
-y
 ya
 yacht
 yahoo
@@ -9983,7 +9964,6 @@ yrs
 yu
 yugoslavia
 yukon
-z
 za
 zambia
 zdnet
